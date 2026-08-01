@@ -12,7 +12,8 @@
   <meta name="apple-mobile-web-app-title" content="黎岩的计算器" />
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
 
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
 
@@ -123,6 +124,24 @@
       padding: 7px 10px;
       border-radius: 999px;
       background: var(--func);
+      white-space: nowrap;
+    }
+
+    .brand-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .install-app {
+      display: none;
+      min-height: auto;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: white;
+      background: var(--op);
+      box-shadow: none;
       white-space: nowrap;
     }
 
@@ -351,7 +370,10 @@
     <section class="calculator card" aria-label="计算器">
       <div class="brand">
         <h1>黎岩的计算器</h1>
-        <span class="badge">支持括号与运算优先级</span>
+        <div class="brand-actions">
+          <span class="badge">支持括号与运算优先级</span>
+          <button id="installApp" class="install-app" type="button">安装应用</button>
+        </div>
       </div>
 
       <div class="display" aria-live="polite">
@@ -536,6 +558,7 @@
     const historyListEl = document.getElementById("historyList");
     const clearHistoryEl = document.getElementById("clearHistory");
     const offlineNoteEl = document.getElementById("offlineNote");
+    const installAppEl = document.getElementById("installApp");
     const STORAGE_KEY = "liyan-calculator-history-v1";
     const RESULT_SIGNIFICANT_DIGITS = 10;
     const MAX_PLAIN_RESULT_LENGTH = 16;
@@ -807,6 +830,27 @@
     window.addEventListener("online", updateOnlineStatus);
     window.addEventListener("offline", updateOnlineStatus);
     updateOnlineStatus();
+
+    let deferredInstallPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      installAppEl.style.display = "block";
+    });
+
+    installAppEl.addEventListener("click", async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      installAppEl.style.display = "none";
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredInstallPrompt = null;
+      installAppEl.style.display = "none";
+    });
 
     let viewportUpdateFrame = 0;
 

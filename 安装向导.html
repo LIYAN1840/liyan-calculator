@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>黎岩的计算器 PWA 安装向导</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+margin: 0 auto;
+max-width: 920px;
+padding: 36px 24px 80px;
+color: #172033;
+background: #f8fafc;
+font: 17px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+h1, h2, h3 { color: #111827; line-height: 1.3; }
+h1 { font-size: 34px; border-bottom: 4px solid #6366f1; padding-bottom: 14px; }
+h2 { margin-top: 48px; font-size: 26px; }
+h3 { margin-top: 30px; font-size: 20px; }
+p, li { max-width: 78ch; }
+li { margin: 5px 0; }
+code {
+padding: 2px 6px;
+color: #4338ca;
+background: #eef2ff;
+border-radius: 6px;
+overflow-wrap: anywhere;
+}
+blockquote {
+margin: 20px 0;
+padding: 14px 18px;
+color: #7c2d12;
+background: #fff7ed;
+border-left: 5px solid #fb923c;
+border-radius: 8px;
+}
+a { color: #4f46e5; }
+hr { margin: 42px 0; border: 0; border-top: 1px solid #cbd5e1; }
+@media (max-width: 600px) {
+body { padding: 20px 16px 60px; font-size: 16px; }
+h1 { font-size: 27px; }
+h2 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">黎岩的计算器 PWA 安装向导</h1>
+</header>
+<h1 id="黎岩的计算器pwa-超详细安装向导">《黎岩的计算器》PWA
+超详细安装向导</h1>
+<p>这份向导按“第一次接触 GitHub
+也能完成”的方式编写。请不要跳步骤。遇到问题时，先看最后的“常见问题排查”。</p>
+<hr />
+<h2 id="一你最终会得到什么">一、你最终会得到什么</h2>
+<p>完成后，你会有：</p>
+<ol type="1">
+<li>一个公开的网址，例如：<code>https://你的用户名.github.io/liyan-calculator/</code></li>
+<li>一个能在浏览器里直接使用的计算器。</li>
+<li>一个能安装到 Windows、macOS、Android、iPhone 或 iPad 主屏幕的 PWA
+应用。</li>
+<li>首次成功联网打开后，即使暂时断网，计算器通常仍可继续使用。</li>
+</ol>
+<p>PWA
+可以理解为“用网页技术做成、但可以像普通应用一样安装”的程序。你不需要购买服务器，也不需要安装编程软件。</p>
+<hr />
+<h2 id="二开始前要准备什么">二、开始前要准备什么</h2>
+<p>请准备：</p>
+<ul>
+<li>一台能上网的电脑。</li>
+<li>一个电子邮箱。</li>
+<li>一个 GitHub 账号。</li>
+<li>本压缩包：<code>黎岩的计算器-PWA-GitHub-Pages.zip</code>。</li>
+<li>推荐浏览器：Microsoft Edge 或 Google Chrome。</li>
+</ul>
+<h3 id="还没有-github-账号怎么办">还没有 GitHub 账号怎么办</h3>
+<ol type="1">
+<li>打开 <code>https://github.com/</code>。</li>
+<li>点击右上角 <strong>Sign up</strong>（注册）。</li>
+<li>按网页提示输入邮箱、密码和用户名。</li>
+<li>到邮箱里完成验证。</li>
+<li>回到 GitHub 登录。</li>
+</ol>
+<p>请记住你的 GitHub 用户名。后面的网站地址会用到它。</p>
+<hr />
+<h2 id="三先解压压缩包">三、先解压压缩包</h2>
+<h3 id="windows-电脑">Windows 电脑</h3>
+<ol type="1">
+<li>在“下载”文件夹找到
+<code>黎岩的计算器-PWA-GitHub-Pages.zip</code>。</li>
+<li>用鼠标右键点击压缩包。</li>
+<li>点击 <strong>全部解压</strong>。</li>
+<li>保持默认位置，点击 <strong>提取</strong>。</li>
+<li>打开解压后的文件夹。</li>
+</ol>
+<h3 id="macos-电脑">macOS 电脑</h3>
+<ol type="1">
+<li>在“下载”文件夹找到压缩包。</li>
+<li>双击压缩包。</li>
+<li>系统会自动生成同名文件夹。</li>
+<li>打开这个文件夹。</li>
+</ol>
+<h3 id="解压后应该看到什么">解压后应该看到什么</h3>
+<p>文件夹中应当有：</p>
+<ul>
+<li><code>index.html</code></li>
+<li><code>manifest.webmanifest</code></li>
+<li><code>service-worker.js</code></li>
+<li><code>README.md</code></li>
+<li><code>安装向导.md</code></li>
+<li><code>安装向导.html</code></li>
+<li><code>.nojekyll</code></li>
+<li><code>icons</code> 文件夹</li>
+</ul>
+<p><code>icons</code> 文件夹里应有 5 张 PNG 图片。</p>
+<blockquote>
+<p>非常重要：后面要上传的是“解压后的这些文件和文件夹”，不是把 ZIP
+压缩包本身上传进去。</p>
+</blockquote>
+<hr />
+<h2 id="四在-github-新建仓库">四、在 GitHub 新建仓库</h2>
+<p>“仓库”可以理解为 GitHub 上用来放网站文件的文件夹。</p>
+<ol type="1">
+<li>登录 <code>https://github.com/</code>。</li>
+<li>点击页面右上角的 <strong>+</strong> 号。</li>
+<li>点击 <strong>New repository</strong>（新建仓库）。</li>
+<li>在 <strong>Repository name</strong>
+中输入：<code>liyan-calculator</code></li>
+<li>在 <strong>Description</strong>
+中可以输入：<code>黎岩的计算器 PWA</code></li>
+<li>选择 <strong>Public</strong>（公开）。</li>
+<li>如果页面上有 <strong>Add a README file</strong>，不要勾选。</li>
+<li><code>.gitignore</code> 保持 <strong>None</strong>。</li>
+<li>License 保持 <strong>None</strong>。</li>
+<li>点击绿色的 <strong>Create repository</strong>。</li>
+</ol>
+<h3 id="为什么建议选-public">为什么建议选 Public</h3>
+<p>GitHub 免费账号最容易用公开仓库发布
+Pages。公开意味着别人可能看到网页源文件，但不会看到你的 GitHub
+密码、电脑文件或计算器历史记录。计算历史只保存在使用者自己的浏览器中。</p>
+<hr />
+<h2 id="五把网页文件上传到仓库">五、把网页文件上传到仓库</h2>
+<p>创建仓库后，你会看到一个新页面。</p>
+<ol type="1">
+<li>找到页面中的 <strong>uploading an existing file</strong>
+链接并点击。</li>
+<li>回到电脑上刚才解压出来的文件夹。</li>
+<li>选中里面的所有文件和 <code>icons</code> 文件夹。</li>
+<li>把选中的内容拖到 GitHub 页面中虚线框区域。</li>
+<li>等待上传进度结束。</li>
+<li>仔细查看文件列表，确认至少有：
+<ul>
+<li><code>index.html</code></li>
+<li><code>manifest.webmanifest</code></li>
+<li><code>service-worker.js</code></li>
+<li><code>icons/icon-192.png</code></li>
+<li><code>icons/icon-512.png</code></li>
+</ul></li>
+<li>页面下方找到 <strong>Commit changes</strong> 区域。</li>
+<li>在说明框中输入：<code>首次上传计算器 PWA</code></li>
+<li>点击绿色的 <strong>Commit changes</strong> 按钮。</li>
+<li>等待页面返回仓库首页。</li>
+</ol>
+<h3 id="如果没有看到-nojekyll">如果没有看到 <code>.nojekyll</code></h3>
+<p>不用紧张。某些电脑会隐藏以英文句点开头的文件。这个项目没有需要 Jekyll
+处理的内容，即使暂时没上传
+<code>.nojekyll</code>，其他文件齐全时通常也能运行。</p>
+<h3 id="上传后最容易犯的错误">上传后最容易犯的错误</h3>
+<ul>
+<li>错误：仓库里只有一个 ZIP 压缩包。</li>
+<li>正确：仓库首页能直接看到 <code>index.html</code> 和其他文件。</li>
+<li>错误：所有文件又被套在一个额外文件夹里。</li>
+<li>正确：<code>index.html</code> 就在仓库最外层，也就是根目录。</li>
+</ul>
+<hr />
+<h2 id="六开启-github-pages">六、开启 GitHub Pages</h2>
+<ol type="1">
+<li>在仓库页面顶部点击 <strong>Settings</strong>（设置）。</li>
+<li>如果看不到 Settings，点击顶部的 <strong>…</strong> 或下拉菜单再找
+Settings。</li>
+<li>在左侧菜单找到 <strong>Code and automation</strong>。</li>
+<li>点击其中的 <strong>Pages</strong>。</li>
+<li>找到 <strong>Build and deployment</strong>。</li>
+<li>在 <strong>Source</strong> 下拉框选择 <strong>Deploy from a
+branch</strong>。</li>
+<li>在 <strong>Branch</strong> 下拉框选择 <code>main</code>。</li>
+<li>旁边的文件夹下拉框选择 <code>/ (root)</code>。</li>
+<li>点击 <strong>Save</strong>。</li>
+</ol>
+<p>保存后，GitHub 会开始发布网站。通常需要 1～5
+分钟；第一次偶尔会更久。</p>
+<h3 id="怎么知道发布成功了">怎么知道发布成功了</h3>
+<ol type="1">
+<li>等一两分钟后刷新 Pages 设置页。</li>
+<li>成功后页面上方会出现类似文字：<strong>Your site is live at
+...</strong></li>
+<li>点击后面的 <strong>Visit site</strong>，或直接点击显示的网址。</li>
+</ol>
+<p>如果你的用户名是 <code>zhangsan</code>，仓库名是
+<code>liyan-calculator</code>，网址通常是：</p>
+<p><code>https://zhangsan.github.io/liyan-calculator/</code></p>
+<p>请把 <code>zhangsan</code> 换成你自己的 GitHub 用户名。</p>
+<blockquote>
+<p>不要把仓库文件页面 <code>github.com/用户名/仓库名</code>
+当作计算器网址。真正的网站一般是 <code>用户名.github.io</code>
+开头。</p>
+</blockquote>
+<hr />
+<h2 id="七第一次打开后先做检查">七、第一次打开后先做检查</h2>
+<p>打开网站后，请依次检查：</p>
+<ol type="1">
+<li>页面标题是不是“黎岩的计算器”。</li>
+<li>输入 <code>1 ÷ 3</code>，结果是不是一个受控长度的小数。</li>
+<li>做几次计算，历史记录是否出现。</li>
+<li>点击“清空记录”，历史是否清除。</li>
+<li>手机横屏、竖屏旋转后，页面是否能恢复。</li>
+<li>浏览器标签或安装窗口里是否出现“黎”字图标。</li>
+</ol>
+<h3 id="检查离线功能">检查离线功能</h3>
+<ol type="1">
+<li>必须先在有网络时成功打开网站一次。</li>
+<li>等待约 10 秒，让浏览器完成缓存。</li>
+<li>不要关闭浏览器标签。</li>
+<li>临时断开 Wi-Fi 或网络。</li>
+<li>刷新网页。</li>
+<li>如果仍能打开并计算，说明离线功能正常。</li>
+</ol>
+<p>历史记录保存在当前浏览器里。换电脑、换浏览器、清除浏览器数据后，历史记录不会自动同步。</p>
+<hr />
+<h2 id="八在-windows-电脑安装">八、在 Windows 电脑安装</h2>
+<p>推荐使用 Microsoft Edge 或 Google
+Chrome。安装后，计算器会出现在“开始”菜单中，并可固定到任务栏。</p>
+<h3 id="方法-amicrosoft-edge">方法 A：Microsoft Edge</h3>
+<ol type="1">
+<li>用 Edge 打开你的 GitHub Pages 网站地址。</li>
+<li>等网页完全显示。</li>
+<li>点击右上角 <strong>…</strong>。</li>
+<li>点击 <strong>应用</strong>（Apps）。</li>
+<li>点击 <strong>将此站点安装为应用</strong>（Install this site as an
+app）。</li>
+<li>名称保持“黎岩的计算器”。</li>
+<li>点击 <strong>安装</strong>。</li>
+<li>如果出现“固定到任务栏”“固定到开始菜单”“创建桌面快捷方式”等选项，可按需要勾选。</li>
+<li>点击 <strong>允许</strong> 或 <strong>完成</strong>。</li>
+</ol>
+<h3 id="方法-bgoogle-chrome">方法 B：Google Chrome</h3>
+<ol type="1">
+<li>用 Chrome 打开网站。</li>
+<li>看地址栏右侧是否有“安装”图标；如果有，直接点击。</li>
+<li>如果没有，点击右上角 <strong>⋮</strong>。</li>
+<li>找到 <strong>投放、保存和分享</strong>（Cast, save, and
+share）。</li>
+<li>点击 <strong>将网页安装为应用</strong>（Install page as app）。</li>
+<li>点击 <strong>安装</strong>。</li>
+</ol>
+<h3 id="找不到安装按钮时">找不到安装按钮时</h3>
+<p>请确认：</p>
+<ul>
+<li>打开的是 <code>https://...github.io/...</code>
+网站，不是本地文件。</li>
+<li>网站地址左侧没有“不安全”警告。</li>
+<li>你已经刷新过一次并等待几秒。</li>
+<li><code>manifest.webmanifest</code>、<code>service-worker.js</code> 和
+<code>icons</code> 文件夹都已上传。</li>
+<li>浏览器不是很旧的版本。</li>
+</ul>
+<hr />
+<h2 id="九在-macos-电脑安装">九、在 macOS 电脑安装</h2>
+<h3 id="使用-chrome">使用 Chrome</h3>
+<ol type="1">
+<li>用 Chrome 打开网站。</li>
+<li>点击地址栏右侧的安装图标；或者点击右上角 <strong>⋮</strong>。</li>
+<li>选择 <strong>投放、保存和分享</strong>。</li>
+<li>选择 <strong>将网页安装为应用</strong>。</li>
+<li>点击 <strong>安装</strong>。</li>
+<li>安装后可从“应用程序”或启动台中打开。</li>
+</ol>
+<p>如果使用 Safari，菜单名称可能随 macOS
+版本变化。最稳妥的方式是先用最新版 Chrome 完成 PWA 安装。</p>
+<hr />
+<h2 id="十在-android-手机上安装">十、在 Android 手机上安装</h2>
+<p>推荐使用 Google Chrome。</p>
+<ol type="1">
+<li>在手机 Chrome 中打开你的 GitHub Pages 网站。</li>
+<li>等待网页完全打开。</li>
+<li>点击右上角 <strong>⋮</strong>。</li>
+<li>点击 <strong>安装应用</strong>，或点击
+<strong>添加到主屏幕</strong>。</li>
+<li>如果出现安装确认窗口，点击 <strong>安装</strong>。</li>
+<li>回到手机主屏幕，找到带“黎”字图标的“黎计算器”。</li>
+<li>点击图标打开，确认顶部没有普通浏览器地址栏，说明它以应用方式运行。</li>
+</ol>
+<p>有些 Android
+手机会先显示“创建快捷方式”，这也可以使用；不同手机品牌的文字可能略有不同。</p>
+<hr />
+<h2 id="十一在-iphone-或-ipad-安装">十一、在 iPhone 或 iPad 安装</h2>
+<p>推荐使用 Safari。</p>
+<ol type="1">
+<li>打开 Safari。</li>
+<li>输入你的 GitHub Pages 网站地址并打开。</li>
+<li>点击 Safari 的 <strong>分享</strong>
+图标，也就是“方框上面有一个向上箭头”的按钮。</li>
+<li>在弹出的菜单中向下滑动。</li>
+<li>点击 <strong>添加到主屏幕</strong>。</li>
+<li>如果看到 <strong>作为网页 App 打开</strong>（Open as Web
+App），请保持开启。</li>
+<li>名称保持“黎计算器”或“黎岩的计算器”。</li>
+<li>点击右上角 <strong>添加</strong>。</li>
+<li>回到主屏幕，找到“黎”字图标。</li>
+<li>点击图标打开。</li>
+</ol>
+<p>如果菜单里没有“添加到主屏幕”：</p>
+<ol type="1">
+<li>滑到分享菜单最下方。</li>
+<li>点击 <strong>编辑操作</strong>。</li>
+<li>找到“添加到主屏幕”并加入常用操作。</li>
+<li>返回后再次尝试。</li>
+</ol>
+<hr />
+<h2 id="十二以后怎样更新计算器">十二、以后怎样更新计算器</h2>
+<p>当你拿到新版 PWA 压缩包时：</p>
+<ol type="1">
+<li>先解压新版压缩包。</li>
+<li>打开原来的 GitHub 仓库。</li>
+<li>点击 <strong>Add file</strong>。</li>
+<li>点击 <strong>Upload files</strong>。</li>
+<li>把新版中的全部文件和 <code>icons</code> 文件夹拖进去。</li>
+<li>GitHub 会识别同名文件并准备覆盖。</li>
+<li>在提交说明中输入：<code>更新计算器版本</code></li>
+<li>点击 <strong>Commit changes</strong>。</li>
+<li>等待 GitHub Pages 重新发布。</li>
+<li>打开网站并刷新。</li>
+</ol>
+<p>已安装的 PWA 通常会自动获取更新。如果仍显示旧页面：</p>
+<ol type="1">
+<li>完全关闭已安装的计算器。</li>
+<li>在浏览器中打开网站并刷新两次。</li>
+<li>等待十几秒。</li>
+<li>再打开已安装的应用。</li>
+<li>仍不更新时，可以卸载 PWA
+后重新安装；历史记录可能随浏览器数据清理而消失。</li>
+</ol>
+<hr />
+<h2 id="十三怎样卸载">十三、怎样卸载</h2>
+<h3 id="windows-edge-或-chrome">Windows Edge 或 Chrome</h3>
+<ol type="1">
+<li>打开已安装的计算器。</li>
+<li>点击窗口右上角的菜单按钮。</li>
+<li>找到 <strong>卸载“黎岩的计算器”</strong>。</li>
+<li>确认卸载。</li>
+</ol>
+<h3 id="android">Android</h3>
+<ol type="1">
+<li>长按主屏幕上的“黎”字图标。</li>
+<li>点击 <strong>卸载</strong> 或拖到卸载区域。</li>
+</ol>
+<h3 id="iphone-或-ipad">iPhone 或 iPad</h3>
+<ol type="1">
+<li>长按主屏幕上的“黎”字图标。</li>
+<li>点击 <strong>移除 App</strong>。</li>
+<li>点击 <strong>删除 App</strong> 或
+<strong>从主屏幕移除</strong>。</li>
+</ol>
+<hr />
+<h2 id="十四常见问题排查">十四、常见问题排查</h2>
+<h3 id="1-网站显示-404">1. 网站显示 404</h3>
+<p>按顺序检查：</p>
+<ol type="1">
+<li>Pages 设置中的 Source 是否为 <strong>Deploy from a
+branch</strong>。</li>
+<li>Branch 是否选择 <code>main</code>。</li>
+<li>文件夹是否选择 <code>/ (root)</code>。</li>
+<li>仓库根目录是否有 <code>index.html</code>。</li>
+<li>是否等待了几分钟。</li>
+<li>网站地址中的用户名和仓库名是否完全正确。</li>
+</ol>
+<h3 id="2-页面能打开但没有黎字图标">2. 页面能打开，但没有“黎”字图标</h3>
+<p>检查仓库里是否有：</p>
+<ul>
+<li><code>icons/icon-180.png</code></li>
+<li><code>icons/icon-192.png</code></li>
+<li><code>icons/icon-512.png</code></li>
+<li><code>icons/icon-maskable-512.png</code></li>
+<li><code>manifest.webmanifest</code></li>
+</ul>
+<p>文件名大小写必须完全一致。</p>
+<h3 id="3-页面能打开但不能离线">3. 页面能打开，但不能离线</h3>
+<ol type="1">
+<li>确认用的是 <code>https://</code> 网站地址。</li>
+<li>有网络时先打开一次并等待 10 秒。</li>
+<li>刷新一次后再测试断网。</li>
+<li>不要在浏览器“无痕模式”中测试。</li>
+<li>确认仓库根目录有 <code>service-worker.js</code>。</li>
+</ol>
+<h3 id="4-浏览器没有安装选项">4. 浏览器没有安装选项</h3>
+<ol type="1">
+<li>先刷新网页。</li>
+<li>等待 10 秒。</li>
+<li>使用最新版 Edge 或 Chrome。</li>
+<li>确认不是在 GitHub 文件预览页。</li>
+<li>确认网站没有 404 文件。</li>
+<li>iPhone/iPad 请从 Safari 的分享菜单选择“添加到主屏幕”。</li>
+</ol>
+<h3 id="5-上传后还是旧版本">5. 上传后还是旧版本</h3>
+<p>这是离线缓存还没有更新造成的。可以：</p>
+<ol type="1">
+<li>等 GitHub Pages 发布完成。</li>
+<li>关闭所有计算器页面和应用窗口。</li>
+<li>重新打开网站。</li>
+<li>按 <code>Ctrl + F5</code> 强制刷新（macOS 可尝试
+<code>Command + Shift + R</code>）。</li>
+<li>再关闭并重新打开应用。</li>
+</ol>
+<h3 id="6-历史记录消失了">6. 历史记录消失了</h3>
+<p>历史记录只存在本机浏览器中。以下情况可能清除它：</p>
+<ul>
+<li>清理浏览器数据。</li>
+<li>使用无痕模式。</li>
+<li>换浏览器或换设备。</li>
+<li>卸载应用时同时选择清除数据。</li>
+</ul>
+<h3 id="7-我把-zip-上传到了仓库但网页打不开">7. 我把 ZIP
+上传到了仓库，但网页打不开</h3>
+<p>GitHub Pages 不会自动把 ZIP 里面的文件当网页运行。请删除或保留 ZIP
+均可，但必须把 ZIP 解压后的 <code>index.html</code>
+等文件单独上传到仓库根目录。</p>
+<hr />
+<h2 id="十五安全与隐私说明">十五、安全与隐私说明</h2>
+<ul>
+<li>这个计算器不需要登录。</li>
+<li>计算内容和历史记录不会上传到 GitHub。</li>
+<li>历史记录使用浏览器本地存储保存。</li>
+<li>GitHub
+仓库公开时，任何人都能看到网页代码和图标，这是静态网站的正常情况。</li>
+<li>不要把密码、身份证号码、银行卡资料或其他私人文件放进仓库。</li>
+</ul>
+<hr />
+<h2 id="十六官方帮助页面">十六、官方帮助页面</h2>
+<ul>
+<li>GitHub Pages
+快速入门：<code>https://docs.github.com/pages/quickstart</code></li>
+<li>GitHub Pages
+发布来源设置：<code>https://docs.github.com/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site</code></li>
+<li>Chrome
+安装网页应用：<code>https://support.google.com/chrome/answer/9658361</code></li>
+<li>Apple
+将网站添加到主屏幕：<code>https://support.apple.com/guide/iphone/open-as-web-app-iphea86e5236/ios</code></li>
+</ul>
+<p>如果 GitHub
+或浏览器以后改变了按钮位置，请优先参考上述官方页面；按钮文字可能略有变化，但整体流程相同。</p>
+</body>
+</html>
