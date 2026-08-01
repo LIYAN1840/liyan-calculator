@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="黎岩的计算器：支持括号、四则运算优先级与最近10次历史记录。" />
+  <meta name="application-name" content="黎岩的计算器" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="黎岩的计算器" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+
+  <title>黎岩的计算器</title>
+
+  <style>
+    :root {
+      --viewport-height: 100svh;
+      color-scheme: light dark;
+      --bg-a: #eef2ff;
+      --bg-b: #f8fafc;
+      --panel: rgba(255,255,255,.68);
+      --panel-border: rgba(255,255,255,.72);
+      --text: #111827;
+      --muted: #64748b;
+      --num: rgba(255,255,255,.84);
+      --func: rgba(226,232,240,.94);
+      --op: #6366f1;
+      --equal: #0f172a;
+      --danger: #ef4444;
+      --shadow: 0 24px 70px rgba(15,23,42,.16);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-a: #111827;
+        --bg-b: #020617;
+        --panel: rgba(15,23,42,.72);
+        --panel-border: rgba(148,163,184,.17);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --num: rgba(30,41,59,.92);
+        --func: rgba(51,65,85,.92);
+        --op: #818cf8;
+        --equal: #f8fafc;
+        --shadow: 0 24px 70px rgba(0,0,0,.4);
+      }
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    body {
+      min-height: var(--viewport-height);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 14% 12%, rgba(99,102,241,.28), transparent 34%),
+        radial-gradient(circle at 88% 82%, rgba(14,165,233,.2), transparent 30%),
+        linear-gradient(145deg, var(--bg-a), var(--bg-b));
+      padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right))
+               max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      overscroll-behavior: none;
+    }
+
+    .app {
+      width: min(1180px, 100%);
+      max-width: 100%;
+      height: max(600px, calc(var(--viewport-height) - 36px));
+      min-height: 0;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(300px, .8fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .app > *, .brand, .display, .history-list, .history-item {
+      min-width: 0;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px) saturate(140%);
+      -webkit-backdrop-filter: blur(22px) saturate(140%);
+    }
+
+    .calculator {
+      padding: clamp(18px, 3vw, 34px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(20px, 3vw, 30px);
+      letter-spacing: -.03em;
+    }
+
+    .badge {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--func);
+      white-space: nowrap;
+    }
+
+    .display {
+      min-height: 156px;
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 20px;
+      background: rgba(127,127,127,.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+
+    .expression {
+      min-height: 30px;
+      color: var(--muted);
+      font-size: clamp(18px, 2.5vw, 26px);
+      text-align: right;
+      white-space: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .expression::-webkit-scrollbar { display: none; }
+
+    .result {
+      margin-top: 10px;
+      min-height: 58px;
+      font-size: clamp(38px, 7vw, 68px);
+      font-weight: 750;
+      letter-spacing: -.05em;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .result.compact { font-size: clamp(30px, 5.6vw, 54px); }
+    .result.very-compact { font-size: clamp(24px, 4.6vw, 42px); }
+
+    .result.error {
+      color: var(--danger);
+      font-size: clamp(24px, 4vw, 38px);
+    }
+
+    .keys {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-rows: repeat(5, minmax(62px, 1fr));
+      gap: clamp(10px, 1.6vw, 15px);
+    }
+
+    button {
+      border: 0;
+      border-radius: 22px;
+      font: inherit;
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 650;
+      color: var(--text);
+      background: var(--num);
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 8px 18px rgba(15,23,42,.08);
+      transition: transform .1s ease, filter .1s ease, box-shadow .1s ease;
+      touch-action: manipulation;
+      min-height: 60px;
+    }
+
+    button:active {
+      transform: scale(.96);
+      filter: brightness(.96);
+      box-shadow: inset 0 2px 8px rgba(15,23,42,.12);
+    }
+
+    button:focus-visible {
+      outline: 3px solid rgba(99,102,241,.4);
+      outline-offset: 2px;
+    }
+
+    .function { background: var(--func); }
+    .operator { background: var(--op); color: white; }
+    .equals { background: var(--equal); color: var(--bg-b); }
+    @media (prefers-color-scheme: dark) { .equals { color: #0f172a; } }
+
+    .history {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .history h2 { margin: 0; font-size: 22px; }
+
+    .clear-history {
+      min-height: auto;
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--danger);
+      background: rgba(239,68,68,.1);
+      box-shadow: none;
+    }
+
+    .clear-history:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
+    .history-list {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 2px;
+    }
+
+    .history-item {
+      width: 100%;
+      min-height: auto;
+      text-align: left;
+      padding: 14px 15px;
+      border-radius: 16px;
+      background: rgba(127,127,127,.08);
+      box-shadow: none;
+    }
+
+    .history-expression {
+      font-size: 14px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-result {
+      margin-top: 5px;
+      font-size: 22px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-time {
+      margin-top: 5px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .empty {
+      margin: auto;
+      text-align: center;
+      color: var(--muted);
+      padding: 30px 10px;
+    }
+
+    .empty-icon { font-size: 42px; margin-bottom: 12px; }
+
+    .offline-note {
+      position: fixed;
+      left: 50%;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      z-index: 10;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(15,23,42,.9);
+      color: white;
+      font-size: 13px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      display: none;
+    }
+
+    @media (max-width: 780px) {
+      body {
+        padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+                 max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      }
+      .app { grid-template-columns: 1fr; height: auto; min-height: auto; }
+      .calculator { min-height: calc(var(--viewport-height) - 24px); }
+      .history {
+        height: min(420px, calc(var(--viewport-height) - 24px));
+        min-height: 280px;
+        overflow: hidden;
+      }
+      .card { border-radius: 24px; }
+    }
+
+    @media (max-width: 430px) {
+      .calculator { padding: 15px; }
+      .display { min-height: 130px; padding: 17px; }
+      .keys { gap: 9px; }
+      button { border-radius: 18px; }
+      .badge { display: none; }
+    }
+
+    @media (orientation: landscape) and (max-height: 560px) {
+      body { padding-top: 10px; padding-bottom: 10px; }
+      .app { min-height: calc(var(--viewport-height) - 20px); }
+      .calculator { min-height: calc(var(--viewport-height) - 20px); padding: 14px; }
+      .brand { margin-bottom: 10px; }
+      .display { min-height: 94px; padding: 12px 16px; margin-bottom: 10px; }
+      .result { min-height: 42px; margin-top: 4px; }
+      .keys { grid-template-rows: repeat(5, minmax(48px, 1fr)); gap: 8px; }
+      button { min-height: 48px; border-radius: 16px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <section class="calculator card" aria-label="计算器">
+      <div class="brand">
+        <h1>黎岩的计算器</h1>
+        <span class="badge">支持括号与运算优先级</span>
+      </div>
+
+      <div class="display" aria-live="polite">
+        <div id="expression" class="expression">0</div>
+        <div id="result" class="result">0</div>
+      </div>
+
+      <div class="keys" id="keys">
+        <button class="function" data-action="clear" aria-label="全部清除">AC</button>
+        <button class="function" data-action="delete" aria-label="删除最后一个字符">⌫</button>
+        <button class="function" data-value="(" aria-label="左括号">(</button>
+        <button class="function" data-value=")" aria-label="右括号">)</button>
+
+        <button data-value="7">7</button>
+        <button data-value="8">8</button>
+        <button data-value="9">9</button>
+        <button class="operator" data-value="÷" aria-label="除">÷</button>
+
+        <button data-value="4">4</button>
+        <button data-value="5">5</button>
+        <button data-value="6">6</button>
+        <button class="operator" data-value="×" aria-label="乘">×</button>
+
+        <button data-value="1">1</button>
+        <button data-value="2">2</button>
+        <button data-value="3">3</button>
+        <button class="operator" data-value="−" aria-label="减">−</button>
+
+        <button data-value="0">0</button>
+        <button data-value=".">.</button>
+        <button class="equals" data-action="calculate" aria-label="计算结果">=</button>
+        <button class="operator" data-value="+" aria-label="加">+</button>
+      </div>
+    </section>
+
+    <aside class="history card" aria-label="历史记录">
+      <div class="history-header">
+        <h2>最近计算</h2>
+        <button id="clearHistory" class="clear-history">清空记录</button>
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </aside>
+  </main>
+
+  <div id="offlineNote" class="offline-note">当前处于离线状态，计算功能仍可使用</div>
+
+  <script>
+    "use strict";
+
+    class ExpressionError extends Error {}
+    class DivisionByZeroError extends Error {}
+
+    class ExpressionEvaluator {
+      evaluate(input) {
+        const normalized = input
+          .replaceAll("×", "*")
+          .replaceAll("÷", "/")
+          .replaceAll("−", "-")
+          .replace(/\s+/g, "");
+
+        if (!normalized) throw new ExpressionError("空表达式");
+
+        this.tokens = this.tokenize(normalized);
+        this.index = 0;
+        const value = this.parseExpression();
+
+        if (this.index !== this.tokens.length) throw new ExpressionError("表达式错误");
+        if (!Number.isFinite(value)) throw new ExpressionError("结果超出范围");
+        return value;
+      }
+
+      tokenize(text) {
+        const tokens = [];
+        let i = 0;
+
+        while (i < text.length) {
+          const ch = text[i];
+
+          if (/[0-9.]/.test(ch)) {
+            let number = "";
+            let dotCount = 0;
+
+            while (i < text.length && /[0-9.]/.test(text[i])) {
+              if (text[i] === ".") dotCount++;
+              if (dotCount > 1) throw new ExpressionError("数字格式错误");
+              number += text[i++];
+            }
+
+            if (number === ".") throw new ExpressionError("数字格式错误");
+            const value = Number(number);
+            if (!Number.isFinite(value)) throw new ExpressionError("数字格式错误");
+            tokens.push({ type: "number", value });
+            continue;
+          }
+
+          if ("+-*/()".includes(ch)) {
+            tokens.push({ type: ch, value: ch });
+            i++;
+            continue;
+          }
+
+          throw new ExpressionError("包含无效字符");
+        }
+
+        return tokens;
+      }
+
+      current(type) {
+        return this.tokens[this.index]?.type === type;
+      }
+
+      consume(type) {
+        if (!this.current(type)) throw new ExpressionError("表达式错误");
+        return this.tokens[this.index++];
+      }
+
+      parseExpression() {
+        let value = this.parseTerm();
+
+        while (this.current("+") || this.current("-")) {
+          const operator = this.tokens[this.index++].type;
+          const right = this.parseTerm();
+          value = operator === "+" ? value + right : value - right;
+        }
+
+        return value;
+      }
+
+      parseTerm() {
+        let value = this.parseUnary();
+
+        while (this.current("*") || this.current("/")) {
+          const operator = this.tokens[this.index++].type;
+          const right = this.parseUnary();
+
+          if (operator === "/") {
+            if (Math.abs(right) < Number.EPSILON) {
+              throw new DivisionByZeroError("无法除以零");
+            }
+            value /= right;
+          } else {
+            value *= right;
+          }
+        }
+
+        return value;
+      }
+
+      parseUnary() {
+        if (this.current("+")) {
+          this.index++;
+          return this.parseUnary();
+        }
+
+        if (this.current("-")) {
+          this.index++;
+          return -this.parseUnary();
+        }
+
+        return this.parsePrimary();
+      }
+
+      parsePrimary() {
+        if (this.current("number")) {
+          return this.tokens[this.index++].value;
+        }
+
+        if (this.current("(")) {
+          this.index++;
+          const value = this.parseExpression();
+          this.consume(")");
+          return value;
+        }
+
+        throw new ExpressionError("表达式错误");
+      }
+    }
+
+    const evaluator = new ExpressionEvaluator();
+    const expressionEl = document.getElementById("expression");
+    const resultEl = document.getElementById("result");
+    const historyListEl = document.getElementById("historyList");
+    const clearHistoryEl = document.getElementById("clearHistory");
+    const offlineNoteEl = document.getElementById("offlineNote");
+    const STORAGE_KEY = "liyan-calculator-history-v1";
+    const RESULT_SIGNIFICANT_DIGITS = 10;
+    const MAX_PLAIN_RESULT_LENGTH = 16;
+    const MAX_EXPRESSION_LENGTH = 160;
+
+    let expression = "";
+    let justCalculated = false;
+    let history = loadHistory();
+
+    function formatResult(value) {
+      if (Object.is(value, -0)) value = 0;
+
+      const rounded = Number.parseFloat(value.toPrecision(RESULT_SIGNIFICANT_DIGITS));
+      const absolute = Math.abs(rounded);
+
+      if ((absolute !== 0 && absolute < 1e-8) || absolute >= 1e11) {
+        return rounded.toExponential(8).replace(/\.?0+e/, "e");
+      }
+
+      const plain = String(rounded);
+      return plain.length <= MAX_PLAIN_RESULT_LENGTH
+        ? plain
+        : rounded.toExponential(8).replace(/\.?0+e/, "e");
+    }
+
+    function setResultText(text) {
+      const displayText = String(text);
+      resultEl.textContent = displayText;
+      resultEl.title = displayText;
+      resultEl.classList.toggle("compact", displayText.length > 12);
+      resultEl.classList.toggle("very-compact", displayText.length > 16);
+    }
+
+    function updateDisplay(message = null, isError = false) {
+      expressionEl.textContent = expression || "0";
+      setResultText(message ?? previewResult());
+      resultEl.classList.toggle("error", isError);
+      expressionEl.scrollLeft = expressionEl.scrollWidth;
+    }
+
+    function previewResult() {
+      if (!expression) return "0";
+
+      try {
+        return formatResult(evaluator.evaluate(expression));
+      } catch {
+        return "…";
+      }
+    }
+
+    function lastChar() {
+      return expression.slice(-1);
+    }
+
+    function isOperator(char) {
+      return ["+", "−", "×", "÷"].includes(char);
+    }
+
+    function appendValue(value) {
+      resultEl.classList.remove("error");
+
+      if (expression.length >= MAX_EXPRESSION_LENGTH && !isOperator(value)) return;
+
+      if (justCalculated) {
+        if (isOperator(value)) {
+          justCalculated = false;
+        } else {
+          expression = "";
+          justCalculated = false;
+        }
+      }
+
+      const last = lastChar();
+
+      if (isOperator(value)) {
+        if (!expression) {
+          if (value === "−") expression = "−";
+          updateDisplay();
+          return;
+        }
+
+        if (isOperator(last)) {
+          if (value === "−" && ["×", "÷", "+"].includes(last)) {
+            expression += value;
+          } else {
+            expression = expression.slice(0, -1) + value;
+          }
+          updateDisplay();
+          return;
+        }
+
+        if (last === "(" && value !== "−") return;
+      }
+
+      if (value === ".") {
+        const currentNumber = expression.split(/[+\−×÷()]/).pop();
+
+        if (currentNumber.includes(".")) return;
+        if (!currentNumber) expression += "0";
+      }
+
+      if (value === "(" && /[0-9.)]/.test(last)) return;
+
+      if (value === ")") {
+        const opens = (expression.match(/\(/g) || []).length;
+        const closes = (expression.match(/\)/g) || []).length;
+
+        if (opens <= closes || !expression || isOperator(last) || last === "(") return;
+      }
+
+      if (/^[0-9]$/.test(value) && last === ")") return;
+
+      expression += value;
+      updateDisplay();
+    }
+
+    function calculate() {
+      if (!expression) return;
+
+      try {
+        const value = evaluator.evaluate(expression);
+        const formatted = formatResult(value);
+
+        addHistory(expression, formatted);
+        setResultText(formatted);
+        resultEl.classList.remove("error");
+        expression = formatted.replace("-", "−");
+        expressionEl.textContent = expression;
+        justCalculated = true;
+      } catch (error) {
+        const message = error instanceof DivisionByZeroError ? "无法除以零" : "表达式错误";
+        updateDisplay(message, true);
+      }
+    }
+
+    function clearAll() {
+      expression = "";
+      justCalculated = false;
+      updateDisplay();
+    }
+
+    function deleteLast() {
+      if (justCalculated) {
+        clearAll();
+        return;
+      }
+
+      expression = expression.slice(0, -1);
+      updateDisplay();
+    }
+
+    function loadHistory() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed.slice(0, 10) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveHistory() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(0, 10)));
+      } catch {
+        // 隐私模式或本地文件限制存储时，当前页面内仍可正常使用历史记录。
+      }
+    }
+
+    function addHistory(expr, result) {
+      history.unshift({
+        expression: expr,
+        result,
+        time: new Date().toLocaleString("zh-CN", {
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        })
+      });
+
+      history = history.slice(0, 10);
+      saveHistory();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      historyListEl.innerHTML = "";
+      clearHistoryEl.disabled = history.length === 0;
+
+      if (!history.length) {
+        historyListEl.innerHTML =
+          '<div class="empty"><div class="empty-icon">🧮</div><div>还没有计算记录</div></div>';
+        return;
+      }
+
+      history.forEach((item) => {
+        const button = document.createElement("button");
+        button.className = "history-item";
+        button.type = "button";
+
+        button.innerHTML = `
+          <div class="history-expression"></div>
+          <div class="history-result"></div>
+          <div class="history-time"></div>
+        `;
+
+        button.querySelector(".history-expression").textContent = item.expression;
+        button.querySelector(".history-result").textContent = "= " + item.result;
+        button.querySelector(".history-time").textContent = item.time;
+
+        button.addEventListener("click", () => {
+          expression = item.expression;
+          justCalculated = false;
+          updateDisplay();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        historyListEl.appendChild(button);
+      });
+    }
+
+    document.getElementById("keys").addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+
+      if (navigator.vibrate) navigator.vibrate(8);
+
+      if (button.dataset.value) appendValue(button.dataset.value);
+      if (button.dataset.action === "clear") clearAll();
+      if (button.dataset.action === "delete") deleteLast();
+      if (button.dataset.action === "calculate") calculate();
+    });
+
+    clearHistoryEl.addEventListener("click", () => {
+      if (!history.length) return;
+
+      history = [];
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        // 存储不可用时，也应立即清除当前页面中的记录。
+      }
+      renderHistory();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const keyMap = { "*": "×", "/": "÷", "-": "−" };
+      const key = keyMap[event.key] || event.key;
+
+      if (/^[0-9.]$/.test(key) || ["+", "−", "×", "÷", "(", ")"].includes(key)) {
+        appendValue(key);
+        event.preventDefault();
+      } else if (event.key === "Enter" || event.key === "=") {
+        calculate();
+        event.preventDefault();
+      } else if (event.key === "Backspace") {
+        deleteLast();
+        event.preventDefault();
+      } else if (event.key === "Escape") {
+        clearAll();
+        event.preventDefault();
+      }
+    });
+
+    function updateOnlineStatus() {
+      offlineNoteEl.style.display = navigator.onLine ? "none" : "block";
+    }
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+    updateOnlineStatus();
+
+    let viewportUpdateFrame = 0;
+
+    function updateViewportHeight() {
+      cancelAnimationFrame(viewportUpdateFrame);
+      viewportUpdateFrame = requestAnimationFrame(() => {
+        const height = window.visualViewport?.height || window.innerHeight;
+        document.documentElement.style.setProperty("--viewport-height", `${Math.round(height)}px`);
+        expressionEl.scrollLeft = expressionEl.scrollWidth;
+      });
+    }
+
+    window.addEventListener("resize", updateViewportHeight, { passive: true });
+    window.addEventListener("orientationchange", updateViewportHeight, { passive: true });
+    window.addEventListener("pageshow", updateViewportHeight, { passive: true });
+    window.visualViewport?.addEventListener("resize", updateViewportHeight, { passive: true });
+    updateViewportHeight();
+
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch(() => {
+          // 即使注册失败，计算器本身仍可正常使用。
+        });
+      });
+    }
+
+    renderHistory();
+    updateDisplay();
+
+    window.CalculatorTestAPI = {
+      evaluate: (expr) => evaluator.evaluate(expr),
+      formatResult
+    };
+  </script>
+</body>
+</html>
